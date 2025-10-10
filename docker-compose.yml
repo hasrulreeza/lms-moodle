@@ -1,0 +1,93 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: moodle_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: moodle
+      POSTGRES_PASSWORD: moodleismypassword
+      POSTGRES_DB: moodledb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - moodle-net
+      - mynet
+
+  redis:
+    image: redis:7
+    container_name: moodle_redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "900", "1", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    networks:
+      - moodle-net
+
+  moodle:
+    image: hasrulreeza/lms-moodle:latest
+    container_name: moodle_app
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      MOODLE_DB_TYPE: pgsql
+      MOODLE_DB_HOST: postgres
+      MOODLE_DB_NAME: moodledb
+      MOODLE_DB_USER: moodle
+      MOODLE_DB_PASS: moodleismypassword
+      MOODLE_WWWROOT: https://moodle-demo.reezaverse.com
+      MOODLE_DATAROOT: /var/www/moodledata
+    volumes:
+      - ./moodle/config.php:/var/www/html/config.php:ro
+      - ./moodle/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./moodle/custom_plugins:/var/www/html/local
+      - ./moodle/custom_themes:/var/www/html/theme
+      - ./moodle/custom_mod:/var/www/html/mod
+      - ./moodle/custom_blocks:/var/www/html/blocks
+      - ./moodle/moodledata:/var/www/moodledata
+    networks:
+      - moodle-net
+      - mynet
+    restart: unless-stopped
+
+  cron:
+    image: hasrulreeza/lms-moodle:latest
+    container_name: moodle_cron
+    depends_on:
+      - moodle
+      - postgres
+      - redis
+    entrypoint: ["/usr/local/bin/moodle-cron-wrapper.sh"]
+    environment:
+      MOODLE_DB_TYPE: pgsql
+      MOODLE_DB_HOST: postgres
+      MOODLE_DB_NAME: moodledb
+      MOODLE_DB_USER: moodle
+      MOODLE_DB_PASS: moodleismypassword
+      MOODLE_WWWROOT: http://localhost:8080
+      MOODLE_DATAROOT: /var/www/moodledata
+    volumes:
+      - ./moodle/config.php:/var/www/html/config.php:ro
+      - ./moodle/php.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./moodle/custom_plugins:/var/www/html/local
+      - ./moodle/custom_themes:/var/www/html/theme
+      - ./moodle/custom_mod:/var/www/html/mod
+      - ./moodle/custom_blocks:/var/www/html/blocks
+      - ./moodle/moodledata:/var/www/moodledata
+    networks:
+      - moodle-net
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  moodle-net:
+  mynet:
+    external: true
