@@ -53,8 +53,8 @@ services:
       - ./moodle/php.ini:/usr/local/etc/php/conf.d/custom.ini
       - ./moodle/custom_plugins:/var/www/html/public/local
       - ./moodle/custom_themes:/var/www/html/public/theme
-      - ./moodle/custom_mod:/var/www/html/public/mod
-      - ./moodle/custom_blocks:/var/www/html/public/blocks
+#      - ./moodle/custom_mod:/var/www/html/public/mod
+#      - ./moodle/custom_blocks:/var/www/html/public/blocks
       - ./moodle/moodledata:/var/www/moodledata
     networks:
       - moodle-net
