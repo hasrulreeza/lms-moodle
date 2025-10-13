@@ -16,6 +16,12 @@ $CFG->wwwroot   = getenv('MOODLE_WWWROOT');
 $CFG->dataroot  = '/var/www/moodledata';
 $CFG->admin     = 'admin';
 
+$CFG->sslproxy = true;
+
+if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+    $_SERVER['HTTPS'] = 'on';
+}
+
 $CFG->directorypermissions = 0777;
 
 // Redis cache & sessions

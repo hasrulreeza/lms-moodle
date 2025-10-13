@@ -69,7 +69,7 @@ services:
       MOODLE_DB_NAME: moodledb
       MOODLE_DB_USER: moodle
       MOODLE_DB_PASS: moodleismypassword
-      MOODLE_WWWROOT: http://localhost:8080
+      MOODLE_WWWROOT: https://moodle-demo.reezaverse.com
       MOODLE_DATAROOT: /var/www/moodledata
     volumes:
       - ./moodle/config.php:/var/www/html/config.php:ro
