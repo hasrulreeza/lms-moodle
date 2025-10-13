@@ -15,17 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Feedback version information
  *
- * @package    block_feedback
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @package mod_feedback
+ * @author     Andreas Grabs
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2025100600;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2025092600;        // Requires this Moodle version.
-$plugin->component = 'block_feedback';  // Full name of the plugin (used for diagnostics)
+$plugin->version   = 2025100600;       // The current module version (Date: YYYYMMDDXX).
+$plugin->requires  = 2025092600;    // Requires this Moodle version.
+$plugin->component = 'mod_feedback';   // Full name of the plugin (used for diagnostics)
+$plugin->cron      = 0;
 
-$plugin->dependencies = ['mod_feedback' => 2025092600];
+$feedback_version_intern = 1; //this version is used for restore older backups

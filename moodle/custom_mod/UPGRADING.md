@@ -1,23 +1,20 @@
-# core_block (subsystem / plugintype) Upgrade notes
-
-## 5.1
-
-### Changed
-
-- Subcontext visibility is now turned on by default when adding blocks. This change makes it much easier to manage blocks, for example, in courses that lack a view page.
-
-  For more information see [MDL-85433](https://tracker.moodle.org/browse/MDL-85433)
-
-### Removed
-
-- Removed block_section_links from Moodle 5.1.
-
-  For more information see [MDL-80556](https://tracker.moodle.org/browse/MDL-80556)
+# mod (plugin type) Upgrade notes
 
 ## 5.0
 
 ### Removed
 
-- Removed block_mnet_hosts plugin from core
+- Remove mod_survey for Moodle 5.0
 
-  For more information see [MDL-84309](https://tracker.moodle.org/browse/MDL-84309)
+  For more information see [MDL-82457](https://tracker.moodle.org/browse/MDL-82457)
+- Remove mod_chat from Moodle 5.0
+
+  For more information see [MDL-82457](https://tracker.moodle.org/browse/MDL-82457)
+
+## 4.5
+
+### Added
+
+- Added new `FEATURE_QUICKCREATE` for modules that can be quickly created in the course wihout filling a previous form.
+
+  For more information see [MDL-81767](https://tracker.moodle.org/browse/MDL-81767)

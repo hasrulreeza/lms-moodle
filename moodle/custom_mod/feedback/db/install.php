@@ -14,21 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Feedback block installation.
- *
- * @package    block_feedback
- * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * Perform the post-install procedures.
- */
-function xmldb_block_feedback_install() {
+function xmldb_feedback_install() {
     global $DB;
-
-    // Disable feedback on new installs by default.
-    $DB->set_field('block', 'visible', 0, ['name' => 'feedback']);
 
 }

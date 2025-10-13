@@ -15,34 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file keeps track of upgrades to the feedback block
+ * This file keeps track of upgrades to the feedback module.
  *
- * Sometimes, changes between versions involve alterations to database structures
- * and other major things that may break installations.
+ * Sometimes, changes between versions involve
+ * alterations to database structures and other
+ * major things that may break installations.
  *
- * The upgrade function in this file will attempt to perform all the necessary
- * actions to upgrade your older installation to the current version.
+ * The upgrade function in this file will attempt
+ * to perform all the necessary actions to upgrade
+ * your older installation to the current version.
  *
- * If there's something it cannot do itself, it will tell you what you need to do.
+ * If there's something it cannot do itself, it
+ * will tell you what you need to do.
  *
- * The commands in here will all be database-neutral, using the methods of
- * database_manager class
+ * The commands in here will all be database-neutral,
+ * using the methods of database_manager class
  *
  * Please do not forget to use upgrade_set_timeout()
  * before any action that may take longer time to finish.
  *
- * @package    block_feedback
- * @copyright  2021 Sara Arjona (sara@moodle.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_feedback
+ * @copyright Andreas Grabs
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/**
- * Handles upgrading instances of this block.
- *
- * @param int $oldversion
- * @param object $block
- */
-function xmldb_block_feedback_upgrade($oldversion, $block) {
+function xmldb_feedback_upgrade($oldversion) {
+    global $DB;
+    $dbman = $DB->get_manager();
+
     // Automatically generated Moodle v4.2.0 release upgrade line.
     // Put any upgrade step following this.
 
@@ -57,6 +57,26 @@ function xmldb_block_feedback_upgrade($oldversion, $block) {
 
     // Automatically generated Moodle v5.0.0 release upgrade line.
     // Put any upgrade step following this.
+
+    if ($oldversion < 2025041401) {
+
+        // Changing precision of field name on table feedback to (1333).
+        $table = new xmldb_table('feedback');
+        $field = new xmldb_field('name', XMLDB_TYPE_CHAR, '1333', null, XMLDB_NOTNULL, null, null, 'course');
+
+        // Launch change of precision for field name.
+        $dbman->change_field_precision($table, $field);
+
+        // Changing precision of field name on table feedback_item to (1333).
+        $table = new xmldb_table('feedback_item');
+        $field = new xmldb_field('name', XMLDB_TYPE_CHAR, '1333', null, XMLDB_NOTNULL, null, null, 'template');
+
+        // Launch change of precision for field name.
+        $dbman->change_field_precision($table, $field);
+
+        // Feedback savepoint reached.
+        upgrade_mod_savepoint(true, 2025041401, 'feedback');
+    }
 
     return true;
 }
