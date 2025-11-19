@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: moodleismypassword
       POSTGRES_DB: moodledb
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U moodle"]
       interval: 10s
@@ -16,7 +16,23 @@ services:
       retries: 5
     networks:
       - moodle-net
-      - mynet
+
+  pgadmin:
+    image: elestio/pgadmin:latest
+    restart: always
+    container_name: pgadmin
+    hostname: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: reezaverse@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: reezaverse
+      PGADMIN_LISTEN_ADDRESS: 0.0.0.0
+      PGADMIN_LISTEN_PORT: 8080
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - moodle-net
 
   redis:
     image: redis:7
@@ -25,6 +41,23 @@ services:
     command: ["redis-server", "--save", "900", "1", "--appendonly", "yes"]
     volumes:
       - redis_data:/data
+    networks:
+      - moodle-net
+
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "81:81"     # NPM Admin UI
+      - "443:443"
+    environment:
+      - TZ=UTC
+      - DISABLE_IPV6=true
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
     networks:
       - moodle-net
 
@@ -58,7 +91,6 @@ services:
       - ./moodle/moodledata:/var/www/moodledata
     networks:
       - moodle-net
-      - mynet
 
   cron:
     image: hasrulreeza/lms-moodle:latest
@@ -92,10 +124,11 @@ services:
       - moodle-net
 
 volumes:
-  postgres_data:
+  pg_data:
+  pgadmin_data:
   redis_data:
+  npm_data:
+  npm_letsencrypt:
 
 networks:
   moodle-net:
-  mynet:
-    external: true
