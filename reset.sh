@@ -1,5 +1,6 @@
 docker compose down -v
-rm -rf moodle/moodledata/*
-rm -rf moodle/moodledate/.htaccess
+
+sudo rm -rf moodle/moodledata/*
+sudo rm -rf moodle/moodledata/.htaccess
 
 docker compose up -d
